@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple MP3 Player</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            margin: 0;
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: #d3d3d3; /* Light grey text */
+        }
+        h1, h2 {
+            color: #d3d3d3;
+        }
+        #fileList {
+            margin-top: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        #playButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #playerPage {
+            display: none;
+            margin-top: 50px;
+        }
+        audio {
+            width: 300px; /* Adjust the width to be smaller */
+            margin-top: 20px;
+        }
+        button {
+            margin: 5px 0;
+            padding: 10px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005f6b;
+        }
+        div, p {
+            color: #d3d3d3;
+        }
+
+        /* Sidebar styling */
+        #sidebar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 200px;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        #sidebar h3 {
+            color: white;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        #sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            margin: 5px 0;
+            padding: 5px;
+            background-color: #4CAF50;
+            border-radius: 5px;
+            text-align: center;
+        }
+        #sidebar a:hover {
+            background-color: #008CBA;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple MP3 Player</h1>
+
+    <!-- Background Image Selection -->
+    <section id="backgroundSection">
+        <h2>Select a Background Image (JPG)</h2>
+        <input type="file" id="bgInput" accept="image/jpeg">
+    </section>
+
+    <!-- File selection section -->
+    <section id="uploadSection">
+        <h2>Select MP3 files</h2>
+        <input type="file" id="fileInput" accept="audio/mp3" multiple>
+        <div id="fileList"></div>
+        <button id="playButton" class="hidden">Play Selected Songs</button>
+    </section>
+
+    <!-- Player page -->
+    <section id="playerPage">
+        <h2>Your Playlist</h2>
+        <div id="playlist"></div>
+        <audio controls id="audioPlayer"></audio>
+    </section>
+
+    <!-- Sidebar for links -->
+    <div id="sidebar">
+        <h3>Quick Links</h3>
+        <a href="https://eaglercraft.ru/">Eaglercraft</a>
+        <a href="https://example.com">Home</a>
+        <a href="file:///home/chronos/u-09e9eed9849a9b8c0162ce753ab56ace459f4cb6/MyFiles/Downloads/MusicPlayer2%20(1).html">Playlist</a>
+        <a href="https://example.com">Contacts</a>
+    </div>
+
+    <script>
+        const bgInput = document.getElementById('bgInput');
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+        const playButton = document.getElementById('playButton');
+        const playerPage = document.getElementById('playerPage');
+        const playlist = document.getElementById('playlist');
+        const audioPlayer = document.getElementById('audioPlayer');
+
+        let files = [];
+
+        // Set background image from selected file
+        bgInput.addEventListener('change', (event) => {
+            const bgFile = event.target.files[0];
+            if (bgFile) {
+                const bgURL = URL.createObjectURL(bgFile);
+                document.body.style.backgroundImage = `url(${bgURL})`;
+            }
+        });
+
+        // Display the uploaded MP3 files
+        fileInput.addEventListener('change', (event) => {
+            files = Array.from(event.target.files);
+            fileList.innerHTML = '';
+
+            if (files.length > 0) {
+                files.forEach((file, index) => {
+                    const listItem = document.createElement('div');
+                    listItem.textContent = `${index + 1}. ${file.name}`;
+                    fileList.appendChild(listItem);
+                });
+                playButton.classList.remove('hidden');
+            } else {
+                playButton.classList.add('hidden');
+            }
+        });
+
+        // Play button handler
+        playButton.addEventListener('click', () => {
+            document.getElementById('uploadSection').style.display = 'none';
+            playerPage.style.display = 'block';
+
+            files.forEach((file, index) => {
+                const songButton = document.createElement('button');
+                songButton.textContent = `${index + 1}. ${file.name}`;
+                songButton.style.display = 'block';
+                songButton.addEventListener('click', () => {
+                    const audioURL = URL.createObjectURL(file);
+                    audioPlayer.src = audioURL;
+                    audioPlayer.play();
+                });
+                playlist.appendChild(songButton);
+            });
+        });
+    </script>
+</body>
+</html>
